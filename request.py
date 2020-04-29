@@ -8,25 +8,26 @@ import dash_html_components as html
 from bs4 import BeautifulSoup
 import contentlinks as content
 
-titles = []
-links = []
-imgurls = []
-
 def loadContent(url,clink,hlink,tlink, ilink,https):
     response = requests.get(url)
     if response.status_code == 200:
+        titles = []
+        links = []
+        imgurls = []
         content = response.content
+        number_of_articles = 10
         soup1 = BeautifulSoup(content, features="html.parser")
         coverpage_news = soup1.find_all(class_=clink)
-        number_of_articles = 20
         for n in np.arange(0, number_of_articles):
             link = coverpage_news[n].find('a', class_=hlink)['href']
-            title = coverpage_news[n].find('span', class_=tlink).get_text()
+            title = coverpage_news[n].find(span, class_=tlink).get_text()
             imgurl = coverpage_news[n].find(class_=ilink)['src']
             link = ''.join((https, link))
             links.append(link)
             imgurls.append(imgurl)
             titles.append(title)
+            table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
+        return table
     elif response.status_code == 404:
         print("Website not found")
         return
@@ -45,31 +46,44 @@ def generate_table(dataframe):
                 cell = html.Td(html.A(href=value, children=value))
             row.append(cell)
         rows.append(html.Tr(row))
-    return html.Table(
-        [html.Tr([html.Th(col) for col in dataframe.columns])] + rows
+    return html.Table( children=
+        [html.Tr([html.Th(col) for col in dataframe.columns])] + rows,
+        className='newstable',
     )
 
-def generateWebServer(sel):
+def append_content(app, data):
+    df = establishDataframe(data)
+    app.layout = html.Div(children=[
+        html.H1(children='Headlines'),
+        generate_table(df)
+    ])
+    return app
+
+def generateWebServer():
+    external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+    for n in range(len(content.websiteUrl)):
+        data = loadContent(content.websiteUrl[n],
+        content.websiteclasslink[n],
+        content.websiteHLink[n],
+        content.websiteTitle[n],
+        content.websiteImage[n],
+        content.websiteHTTP[n])
+
+        append_content(app, data)
+
+    runWebServer(app, input("Load Web Server?").upper())
+    
+def establishDataframe(table):
+    df = pd.DataFrame(table)
+    return df
+
+
+def runWebServer(app, sel):
     if sel == "YES":
-        external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-        app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-        app.layout = html.Div(children=[
-            html.H1(children='News Headlines'),
-            generate_table(df)
-        ])
         app.run_server()
     else:
-        return
+        return    
 
-for n in range(len(content.websiteUrl)):
-    loadContent(content.websiteUrl[n],
-    content.websiteclasslink[n],
-    content.websiteHLink[n],
-    content.websiteTitle[n],
-    content.websiteImage[n],
-    content.websiteHTTP[n]
-    )
-    table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
-    df = pd.DataFrame(table)
-
-    generateWebServer(input("Load Web Server?").upper())
+generateWebServer()
