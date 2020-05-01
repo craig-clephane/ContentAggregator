@@ -1,0 +1,12 @@
+.content {
+    font-size: 10px;
+    width: 30%;
+    /*float:left;*/
+    padding: 5px;
+    overflow: auto;
+    display: inline-block;
+}
+
+.contentRow {
+    width: 50px;
+}
