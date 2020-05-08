@@ -1,12 +1,40 @@
 .content {
     font-size: 10px;
-    width: 30%;
-    /*float:left;*/
+    width: auto;
+    max-width: 23em;
+    float:left;
     padding: 5px;
     overflow: auto;
     display: inline-block;
+    text-align: center;
+}
+.newstable {
+    border-style: solid;
+    border-color: #ededed;
+}
+.contentRow {
+    border-bottom-color: #ededed;
+    height: 5em;
 }
 
-.contentRow {
-    width: 50px;
+.contentRow td {
+    padding-left: 2.5px !important;
+    padding-right: 2.5px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    text-align: center;
+    
+} 
+.contentRow td a {
+    overflow: hidden;
 }
+
+.article_title {
+    text-decoration: none;
+    color: black;
+}
+
+.newstable tr:nth-child(even) {
+    background-color: #f7f5f5;
+}
+

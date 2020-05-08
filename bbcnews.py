@@ -6,8 +6,7 @@ import numpy as np
 
 
 url = 'https://www.bbc.co.uk/news'
-titles = []
-links = []
+titleAndLink = []
 imgurls = []
 number_of_articles = 10
 
@@ -21,18 +20,16 @@ def bbcnewscontent():
             link = coverpage_news[n].find('a', class_='nw-o-link-split__anchor')['href']
            
             title = coverpage_news[n].find('h3', class_='nw-o-link-split__text').get_text()
-            
             #imgurl = coverpage_news[n].find(class_=".gs-o-responsive-image img")['src']
             if link[:4] != 'http':
                 link = ''.join(("https://www.bbc.co.uk/", link))
             else:
-                print("link correct")
-            links.append(link)
+               pass
+            titleAndLink.append([title, link])
             #imgurls.append(imgurl)
-            titles.append(title)
             #table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
-            table = {'TITLE' :titles, 'LINK' : links}
-        return table
+            #table = {'TITLE' :titles, 'LINK' : links}
+        return titleAndLink
     elif response.status_code == 404:
         print("Website not found")
         return

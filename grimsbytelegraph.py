@@ -4,8 +4,7 @@ import requests
 import numpy as np
 
 url = 'https://www.grimsbytelegraph.co.uk/news/'
-titles = []
-links = []
+titleAndLink = []
 imgurls = []
 number_of_articles = 10
 
@@ -22,13 +21,12 @@ def grimsbytelegraphContent():
             if link[:4] != 'http':
                 link = ''.join(('https://www.grimsbytelegraph.co.uk/news/', link))
             else:
-                print("link correct")
-            links.append(link)
+                pass
+            titleAndLink.append([title, link])
             #imgurls.append(imgurl)
-            titles.append(title)
             #table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
-            table = {'TITLE' :titles, 'LINK' : links}
-        return table
+            #table = {'TITLE' :titles, 'LINK' : links}
+        return titleAndLink
     elif response.status_code == 404:
         print("Website not found")
         return

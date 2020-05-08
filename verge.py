@@ -4,8 +4,7 @@ import requests
 import numpy as np
 
 url = 'https://www.theverge.com/'
-titles = []
-links = []
+titleAndLink = []
 imgurls = []
 number_of_articles = 10
 
@@ -16,7 +15,6 @@ def vergeContent():
         soup1 = BeautifulSoup(content, features="html.parser")
         coverpage_news = soup1.find_all(class_='c-entry-box--compact c-entry-box--compact--article')
         for n in np.arange(0, number_of_articles):
-            ##print(coverpage_news[n])
             link = coverpage_news[n].find('h2', class_="c-entry-box--compact__title")
             link = link.find('a')['href']
             title = coverpage_news[n].find('h2', class_="c-entry-box--compact__title")
@@ -25,13 +23,12 @@ def vergeContent():
             if link[:4] != 'http':
                 link = ''.join(('https://www.theverge.com/', link))
             else:
-                print("link correct")
-            links.append(link)
+                pass
+            titleAndLink.append([title, link])
             #imgurls.append(imgurl)
-            titles.append(title)
             #table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
-            table = {'TITLE' :titles, 'LINK' : links}
-        return table
+            #table = {'TITLE' :titles, 'LINK' : links}
+        return titleAndLink
     elif response.status_code == 404:
         print("Website not found")
         return

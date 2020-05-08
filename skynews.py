@@ -4,8 +4,7 @@ import requests
 import numpy as np
 
 url = 'https://news.sky.com/'
-titles = []
-links = []
+titleAndLink = []
 imgurls = []
 number_of_articles = 10
 
@@ -20,12 +19,11 @@ def skynewsContent():
             title = coverpage_news[n].find('span', class_="sdc-site-tile__headline-text").get_text()
             #imgurl = coverpage_news[n].find(class_="sdc-site-tile__image")['src']
             link = ''.join((url, link))
-            links.append(link)
+            titleAndLink.append([title, link])
             #imgurls.append(imgurl)
-            titles.append(title)
             #table = {'IMG' : imgurls, 'TITLE' :titles, 'LINK' : links}
-            table = {'TITLE' :titles, 'LINK' : links}
-        return table
+            #table = {'TITLE' :titles, 'LINK' : links}
+        return titleAndLink
     elif response.status_code == 404:
         print("Website not found")
         return
